@@ -28,9 +28,9 @@ def main():
         collection_type=args.collection_type
     )
     model = JinaImageEmbeding('weights/jina-clip-v1')
-    # image_database = ImageDatabaseSQL('result/database/image.sqlite', 'image')
-    # image_database.connect()
-    # image_database.create_table()
+    image_database = ImageDatabaseSQL('result/database/image.sqlite', 'image')
+    image_database.connect()
+    image_database.create_table()
 
     # Load dataset
     ds = []
@@ -71,13 +71,13 @@ def main():
         image_database.insert_multiple(x)
 
     # Add to database
-    # print("Adding to database:")
-    # add_database = summary_ds.map(
-    #     database_add, 
-    #     batched=True,
-    #     batch_size=1000,
-    #     num_proc=1
-    # )
+    print("Adding to database:")
+    add_database = summary_ds.map(
+        database_add, 
+        batched=True,
+        batch_size=1000,
+        num_proc=1
+    )
 
     # Add pairs to the vector space
     print("Embedding dataset:")
@@ -91,7 +91,7 @@ def main():
     vector_store.add_pairs(processed_ds)
 
     # # Create snapshot
-    # vector_store.create_snapshot('result/collection')
+    vector_store.create_snapshot('result/collection')
 
 if __name__ == "__main__":
     main()
